@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package blinky;
+
+option go_package = "github.com/vatine/blinky/client/pkg/protos";
+
+message SetLEDRequest {
+  int32 Red = 1;
+  int32 Green = 2;
+  int32 Blue = 3;
+  repeated int32 LEDs = 4;
+}
+
+message SetLEDResponse {
+  repeated int32 LEDs = 4;
+}
+
+message GetLEDRequest {
+  repeated int32 LEDs = 1;
+}
+
+message LEDStatus {
+  int32 LED = 1;
+  int32 Red = 2;
+  int32 Green = 3;
+  int32 Blue = 4;
+}
+
+message GetLEDResponse {
+  repeated LEDStatus Status = 1;
+}
+
+service Blinky {
+  rpc SetLEDs (SetLEDRequest) returns (SetLEDResponse) {};
+  rpc GetLEDs (GetLEDRequest) returns (GetLEDResponse) {};
+}
