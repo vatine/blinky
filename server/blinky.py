@@ -1,19 +1,20 @@
-import protos.blinky_pb2_grpc as blinky_grpc
-import protos.blinky_pb2 as blinky
+import blinky_pb2 as blinky
+import blinky_pb2_grpc as blinky_grpc
 
 import blinkstick.blinkstick as blinkstick
 
-import concurrent.futures
+import concurrent.futures as futures
+import grpc
 
 
-class BlinkstickNotFound(exception):
+class BlinkstickNotFound(Exception):
     def __str__(self):
         return "No blinkstick found."
 
 
 class BlinkyServer(blinky_grpc.BlinkyServicer):
     def __init__(self):
-        super().__init__(self)
+        super().__init__()
 
         sticks = blinkstick.find_all()
         if not sticks:
@@ -22,6 +23,7 @@ class BlinkyServer(blinky_grpc.BlinkyServicer):
         self._stick = sticks[0]
 
     def SetLEDs(self, request, context):
+        print("SetLEDs")
         leds = request.LEDs
         response = blinky.SetLEDResponse(LEDs=leds)
 
@@ -29,12 +31,17 @@ class BlinkyServer(blinky_grpc.BlinkyServicer):
         blue = clamp(request.Blue)
         green = clamp(request.Green)
 
+        if not leds:
+            leds = range(self._stick.get_led_count())
+        
         for led in leds:
-            self._stick.set_Color(index=led, red=red, blue=blue, green=green)
+            print(f"led: {led}, {red}, {green}, {blue}")
+            self._stick.set_color(index=led, red=red, blue=blue, green=green)
 
         return response
 
     def GetLEDs(self, request, context):
+        print("GetLEDs")
         leds = request.LEDs
         if not leds:
             leds = range(self._stick.get_led_count())
@@ -61,7 +68,7 @@ def clamp(number):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     blinky_grpc.add_BlinkyServicer_to_server(BlinkyServer(), server)
-    server.add_insecure_port(":4004")
+    server.add_insecure_port("192.168.1.227:4004")
     server.start()
     server.wait_for_termination()
 
