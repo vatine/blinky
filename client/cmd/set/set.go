@@ -31,6 +31,7 @@ func setLEDs(cmd *cobra.Command, args []string) {
 		Red:   int32(red),
 		Green: int32(green),
 		Blue:  int32(blue),
+		LEDs:  config.LEDs,
 	}
 
 	_, err = client.SetLEDs(context.Background(), &req)
