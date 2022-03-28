@@ -5,6 +5,7 @@ import (
 
 	"github.com/vatine/blinky/client/cmd/config"
 	"github.com/vatine/blinky/client/cmd/get"
+	"github.com/vatine/blinky/client/cmd/runner"
 	"github.com/vatine/blinky/client/cmd/set"
 )
 
@@ -18,6 +19,7 @@ func Execute() error {
 	rootCmd.PersistentFlags().StringVar(&config.LEDString, "leds", "", "LEDs to act on.")
 	rootCmd.AddCommand(get.Cmd)
 	rootCmd.AddCommand(set.Cmd)
+	rootCmd.AddCommand(&runner.Cmd)
 
 	return rootCmd.Execute()
 }
