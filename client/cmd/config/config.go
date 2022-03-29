@@ -4,11 +4,14 @@ import (
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 
+	"github.com/vatine/blinky/client/pkg/parse"
 	"github.com/vatine/blinky/client/pkg/protos"
 )
 
 var Server string
 var LogLevel string
+var LEDString string
+var LEDs []int32
 
 // Various post-init settings, common to one and all
 func Setup() {
@@ -22,6 +25,14 @@ func Setup() {
 		level = log.InfoLevel
 	}
 	log.SetLevel(level)
+
+	if LEDString != "" {
+		log.WithFields(log.Fields{
+			"LEDString": LEDString,
+		}).Debug("leds specified")
+		LEDs = parse.Parse(LEDString)
+	}
+
 	log.WithFields(log.Fields{
 		"server":    Server,
 		"log level": LogLevel,

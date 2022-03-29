@@ -14,7 +14,7 @@ import (
 func getLEDs(cms *cobra.Command, args []string) {
 	config.Setup()
 	log.Debug("getLEDs called")
-	req := protos.GetLEDRequest{}
+	req := protos.GetLEDRequest{LEDs: config.LEDs}
 
 	log.Debug("pre-connect")
 	client, err := config.Connect()
