@@ -7,6 +7,7 @@ import (
 	"github.com/vatine/blinky/client/cmd/get"
 	"github.com/vatine/blinky/client/cmd/runner"
 	"github.com/vatine/blinky/client/cmd/set"
+	"github.com/vatine/blinky/client/cmd/spectrum"
 )
 
 var rootCmd = &cobra.Command{
@@ -20,6 +21,7 @@ func Execute() error {
 	rootCmd.AddCommand(get.Cmd)
 	rootCmd.AddCommand(set.Cmd)
 	rootCmd.AddCommand(&runner.Cmd)
+	rootCmd.AddCommand(&spectrum.Cmd)
 
 	return rootCmd.Execute()
 }
