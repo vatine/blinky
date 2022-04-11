@@ -60,13 +60,19 @@ func runner(cmd *cobra.Command, args []string) {
 			}
 			client.SetLEDs(context.Background(), &req)
 			if led > 0 {
-				r, g, b := half(tRed, tGreen, tBlue, leds.Status[ix])
+				r, g, b := half(tRed, tGreen, tBlue, leds.Status[led-1])
 				req := protos.SetLEDRequest{
 					Red:   r,
 					Green: g,
 					Blue:  b,
 					LEDs:  []int32{int32(led - 1)},
 				}
+				log.WithFields(log.Fields{
+					"red":   r,
+					"green": g,
+					"blue":  b,
+					"led":   led - 1,
+				}).Debug()
 				client.SetLEDs(context.Background(), &req)
 			}
 			time.Sleep(sleep)
